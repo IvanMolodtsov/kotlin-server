@@ -1,8 +1,12 @@
 #!/bin/bash
 
+echo "Formatting..."
+
+./gradlew ktlintFormat --daemon
+
 echo "Running lint check..."
 
-./gradlew app:ktlintCheck --daemon
+./gradlew ktlintCheck --daemon
 
 status=$?
 

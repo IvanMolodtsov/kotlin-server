@@ -3,7 +3,7 @@ package com.vanmo.ioc.scope
 import com.vanmo.ioc.Dependency
 import java.util.concurrent.ConcurrentHashMap
 
-class Scope(private var parent: IScope ): MutableScope, LinkedScope {
+class Scope(private var parent: IScope) : MutableScope, LinkedScope {
 
     private val store = ConcurrentHashMap<String, Dependency<*>>()
     private var notFoundStrategy: (String) -> Dependency<*> = { key -> parent[key] }
@@ -16,6 +16,5 @@ class Scope(private var parent: IScope ): MutableScope, LinkedScope {
     }
 
     override fun linkScopes(parent: IScope, notFoundStrategy: (String) -> Dependency<*>) {
-
     }
 }

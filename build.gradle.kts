@@ -33,13 +33,41 @@ subprojects {
     }
 }
 
-tasks.register<Copy>("initGitHooks"){
-    var suffix = "bash"
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        suffix = "windows"
+tasks {
+    register<Copy>("copyGitHooks") {
+        description = "Copy git hooks from scripts/git-hooks"
+        group = "git-hooks"
+        from("$rootDir/scripts/git-hooks/") {
+            include("**/*.sh")
+            rename("(.*).sh", "$1")
+        }
+        into("$rootDir/.git/hooks")
     }
-    from("scripts/pre-commit-$suffix") {
-        rename{it.replaceAfter("pre-commit", "")}
+
+    register<Exec>("installGitHooks") {
+        description = "Installs the pre-commit git hooks from scripts/git-hooks."
+        group = "git-hooks"
+        onlyIf {
+            !Os.isFamily(Os.FAMILY_WINDOWS)
+        }
+        dependsOn(named("copyGitHooks"))
+
+        workingDir(rootDir)
+        commandLine("chmod")
+        args("-R", "+x", ".git/hooks/")
+
+        doLast {
+            logger.info("Git hooks installed successfully.")
+        }
     }
-    into (".git/hooks")
+
+    register<Delete>("deleteGitHooks") {
+        group = "git-hooks"
+        description = "Delete the pre-commit git hooks."
+        delete(fileTree(".git/hooks/"))
+    }
+
+    afterEvaluate {
+        tasks["clean"].dependsOn(tasks.named("installGitHooks"))
+    }
 }

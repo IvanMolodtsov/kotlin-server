@@ -1,13 +1,10 @@
 package com.vanmo.ioc
 
+import com.vanmo.ioc.scope.IScope
+
 object Container {
-    val currentScope: Scope
+    val currentScope = ThreadLocal<IScope>()
 
     init {
-
-    }
-
-    fun get(key: String): Dependency<*> {
-
     }
 }
