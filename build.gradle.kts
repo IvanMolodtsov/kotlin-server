@@ -22,14 +22,28 @@ subprojects {
 
     dependencies {
         implementation(kotlin("stdlib"))
+        testImplementation(platform("org.junit:junit-bom:5.7.2"))
+        testImplementation("org.junit.jupiter:junit-jupiter")
     }
 
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "11"
+    ktlint {
+        disabledRules.set(setOf("no-wildcard-imports"))
+    }
+
+    tasks {
+        withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+            kotlinOptions {
+                freeCompilerArgs = listOf("-Xjsr305=strict")
+                jvmTarget = "11"
+            }
+            dependsOn("ktlintFormat")
         }
-        dependsOn("ktlintFormat")
+        test {
+            useJUnitPlatform()
+            testLogging {
+                events("passed", "skipped", "failed")
+            }
+        }
     }
 }
 

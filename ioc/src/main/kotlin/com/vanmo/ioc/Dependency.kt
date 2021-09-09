@@ -1,3 +1,3 @@
 package com.vanmo.ioc
 
-typealias Dependency<T> = (Array<out Any>) -> T
+typealias Dependency = (Array<out Any>) -> Any
