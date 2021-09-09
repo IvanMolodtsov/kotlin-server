@@ -7,6 +7,6 @@ inline fun <reified T> cast(argument: Any): T {
     if (argument is T) {
         return argument
     } else {
-        throw ResolveDependencyError("Invalid argument type. Expected ${T::class.simpleName}")
+        throw ResolveDependencyError("Invalid argument type. Expected ${T::class}; Received ${argument::class}")
     }
 }
