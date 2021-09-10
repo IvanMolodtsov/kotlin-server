@@ -1,12 +1,25 @@
 #!/bin/bash
-
+BIN=""
+if [ "$(uname)" == "Darwin" ]; then
+   echo 'MAC'
+   BIN=./gradlew
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+   echo 'Linux'
+   BIN=./gradlew
+elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+   echo 'Window 32'
+   BIN=./gradlew.bat
+elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
+    echo 'Window 64'
+   BIN=./gradlew.bat
+fi
 echo "Formatting..."
 
-./gradlew ktlintFormat --daemon
+$BIN ktlintFormat --daemon
 
 echo "Running lint check..."
 
-./gradlew ktlintCheck --daemon
+$BIN ktlintCheck --daemon
 
 status=$?
 

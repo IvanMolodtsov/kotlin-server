@@ -1,8 +1,24 @@
 #!/bin/bash
 
+BIN=""
+if [ "$(uname)" == "Darwin" ]; then
+   echo 'MAC'
+   BIN=./gradlew
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+   echo 'Linux'
+   BIN=./gradlew
+elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+   echo 'Window 32'
+   BIN=./gradlew.bat
+elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
+    echo 'Window 64'
+   BIN=./gradlew.bat
+fi
+
+
 echo "Running tests..."
 
-./gradlew check --daemon
+$BIN check --daemon
 
 status=$?
 
