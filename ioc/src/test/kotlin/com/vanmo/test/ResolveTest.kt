@@ -3,7 +3,7 @@ package com.vanmo.test
 import com.vanmo.common.command.Command
 import com.vanmo.ioc.ResolveDependencyError
 import com.vanmo.ioc.Usable
-import com.vanmo.ioc.dependencyOf
+import com.vanmo.ioc.asDependency
 import com.vanmo.resolve
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -16,7 +16,7 @@ class ResolveTest {
             resolve<Command>(
                 "IoC.Register",
                 "dependencyKey",
-                dependencyOf { 1 }
+                asDependency { 1 }
             )()
             assertEquals(1, resolve("dependencyKey"))
         }
@@ -25,11 +25,11 @@ class ResolveTest {
     @Test
     fun `function resolve should use current dependencies scope to resolve dependency`() {
         resolve<Usable>("Scopes.executeInNewScope").use {
-            resolve<Command>("IoC.Register", "dependencyKey", dependencyOf { 1 })()
+            resolve<Command>("IoC.Register", "dependencyKey", asDependency { 1 })()
             assertEquals(1, resolve("dependencyKey"))
 
             resolve<Usable>("Scopes.executeInNewScope").use {
-                resolve<Command>("IoC.Register", "dependencyKey", dependencyOf { 2 })()
+                resolve<Command>("IoC.Register", "dependencyKey", asDependency { 2 })()
                 assertEquals(2, resolve("dependencyKey"))
             }
 
@@ -40,10 +40,10 @@ class ResolveTest {
     @Test
     fun `IoC dependency may be redefined`() {
         resolve<Usable>("Scopes.executeInNewScope").use {
-            resolve<Command>("IoC.Register", "dependencyKey", dependencyOf { 1 })()
+            resolve<Command>("IoC.Register", "dependencyKey", asDependency { 1 })()
             assertEquals(1, resolve("dependencyKey"))
 
-            resolve<Command>("IoC.Register", "dependencyKey", dependencyOf { 2 })()
+            resolve<Command>("IoC.Register", "dependencyKey", asDependency { 2 })()
             assertEquals(2, resolve("dependencyKey"))
         }
     }
@@ -61,7 +61,7 @@ class ResolveTest {
             resolve<Command>(
                 "IoC.Register",
                 "dependencyKey",
-                dependencyOf { throw ResolveDependencyError("Error") }
+                asDependency { throw ResolveDependencyError("Error") }
             )()
 
             assertThrows<ResolveDependencyError> { resolve<Unit>("dependencyKey") }
