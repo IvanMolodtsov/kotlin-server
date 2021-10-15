@@ -1,6 +1,12 @@
+plugins {
+    `java-library`
+}
+
+val include: MutableList<String?> = MutableList(0) { "" }
+
 dependencies {
-    implementation(project(":common"))
-    implementation(project(":ioc"))
+    implementation(project(":common")).also { include.add("{group: ${it?.group}, name:${it?.name}, version:${it?.version}}") }
+    implementation(project(":ioc")).also { include.add("{group: ${it?.group}, name:${it?.name}, version:${it?.version}}") }
 }
 
 tasks.jar {
@@ -8,7 +14,8 @@ tasks.jar {
         attributes(
             mapOf(
                 "Implementation-Title" to project.name,
-                "Main-Class" to "com.vanmo.test.TestPlugin"
+                "Main-Class" to "com.vanmo.test.TestPlugin",
+                "Dependencies" to include
             )
         )
     }

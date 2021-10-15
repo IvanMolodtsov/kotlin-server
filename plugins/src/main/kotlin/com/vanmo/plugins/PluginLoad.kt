@@ -11,6 +11,7 @@ class PluginLoad : Dependency {
 
     @Throws(ResolveDependencyError::class)
     override fun invoke(arguments: Array<out Any>): Command {
+        @Suppress("UNCHECKED_CAST")
         try {
             val plugin: Plugin = cast(arguments[0])
             val scope: MutableScope = cast(arguments[1])
