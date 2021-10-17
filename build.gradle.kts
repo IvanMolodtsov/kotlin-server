@@ -1,7 +1,7 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
-    kotlin("jvm") version "1.5.30" apply false
+    kotlin("jvm") version "1.5.31" apply false
     java
     id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
 }
@@ -11,8 +11,11 @@ allprojects {
     version = "1.0.0"
 
     repositories {
+        gradlePluginPortal()
+        google()
         mavenCentral()
         maven("https://plugins.gradle.org/m2/")
+        mavenLocal()
     }
 }
 
@@ -28,6 +31,16 @@ subprojects {
 
     ktlint {
         disabledRules.set(setOf("no-wildcard-imports"))
+    }
+
+    val includeJars by configurations.creating {
+        isTransitive = false
+    }
+    val dependency by configurations.creating
+
+    configurations {
+        compileClasspath.get().extendsFrom(includeJars, dependency)
+        runtimeClasspath.get().extendsFrom(includeJars, dependency)
     }
 
     tasks {

@@ -1,11 +1,6 @@
-package com.vanmo.serialization
-
 import com.vanmo.common.`object`.UObject
 import com.vanmo.resolve
-import kotlinx.serialization.*
-
-@Serializable()
-data class j(val group: String, val name: String, val version: String)
+import com.vanmo.serialization.Serialization
 
 fun main() {
     Serialization().load()
