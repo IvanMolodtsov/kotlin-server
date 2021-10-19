@@ -1,4 +1,4 @@
-import java.nio.file.Paths
+
 
 plugins {
     kotlin("jvm")
@@ -12,38 +12,37 @@ kotlin {
     }
 }
 
+val include: Configuration by configurations.creating
+
+configurations {
+    compileClasspath.get().extendsFrom(include)
+    runtimeClasspath.get().extendsFrom(include)
+}
+
 tasks {
-//    register("resolveEntry") {
-//        val entry = project.file(
-//            Paths.get(
-//                project.buildDir.path,
-//                "generated", "ksp", "main", "resources", "EntryPoint.txt"
-//            )
-//        ).reader().toString()
-//        println(
-//            project.file(
-//                Paths.get(
-//                    project.buildDir.path,
-//                    "tmp", "jar", "MANIFEST.MF"
-//                )
-//            ).exists() // writer().append("\nMain-Class: $entry").close()
-//        )
-//    }
 
     jar {
         manifest {
             attributes(
                 mapOf(
                     "Implementation-Title" to project.name,
-                    "Dependencies" to ext.properties["imports"]
+                    "Dependencies" to ext.properties["imports"],
+                    "Main-Class" to "${project.group}.${project.name}"
                 )
             )
         }
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        from(
+            configurations["include"].map {
+                if (it.isDirectory) it else zipTree(it)
+            }
+        )
     }
+}
 
-//    named("build") {
-//        finalizedBy("resolveEntry")
-//    }
+ksp {
+    arg("project-name", project.name)
+    arg("project-group", project.group as String)
 }
 
 dependencies {

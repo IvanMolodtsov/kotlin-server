@@ -33,14 +33,10 @@ subprojects {
         disabledRules.set(setOf("no-wildcard-imports"))
     }
 
-    val includeJars by configurations.creating {
-        isTransitive = false
-    }
-    val dependency by configurations.creating
+    val includeJars by configurations.creating
 
     configurations {
-        compileClasspath.get().extendsFrom(includeJars, dependency)
-        runtimeClasspath.get().extendsFrom(includeJars, dependency)
+        runtimeClasspath.get().extendsFrom(includeJars)
     }
 
     tasks {

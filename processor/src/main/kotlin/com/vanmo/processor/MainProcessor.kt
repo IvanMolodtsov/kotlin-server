@@ -14,24 +14,32 @@ class MainProcessor(
     inner class Visitor(private val file: OutputStream) : KSVisitorVoid() {
 
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
-            file += "${classDeclaration.packageName.asString()}.${classDeclaration.simpleName.asString()}"
+            file += "package com.vanmo.generated"
+            file += "import com.vanmo.common.plugins.IPlugin"
+            file += "import ${classDeclaration.packageName.asString()}.${classDeclaration.simpleName.asString()}"
+
+            file += "class PluginLoader : IPlugin {"
+            file += "override fun load() {"
+            file += "${classDeclaration.simpleName.asString()}().load()"
+            file += "}}"
         }
     }
 
     operator fun OutputStream.plusAssign(str: String) {
-        this.write(str.toByteArray())
+        this.write("$str\n".toByteArray())
     }
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        val filename = options["project-name"] ?: "Entry_Point"
+        val group = options["project-group"] ?: "generated"
         val symbols = resolver.getSymbolsWithAnnotation("com.vanmo.common.plugins.Main")
             .filterIsInstance<KSClassDeclaration>()
         if (!symbols.iterator().hasNext()) return emptyList()
 
         val file: OutputStream = codeGenerator.createNewFile(
             dependencies = Dependencies(false),
-            packageName = "",
-            fileName = "EntryPoint",
-            extensionName = "txt"
+            packageName = group,
+            fileName = filename
         )
 
         symbols.forEach {
@@ -40,7 +48,6 @@ class MainProcessor(
             it.accept(Visitor(file), Unit)
         }
         file.close()
-        val unableToProcess = symbols.filterNot { it.validate() }.toList()
-        return unableToProcess
+        return symbols.filterNot { it.validate() }.toList()
     }
 }
