@@ -1,16 +1,16 @@
 package com.vanmo.processor
 
-import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSVisitorVoid
+import com.google.devtools.ksp.validate
 import java.io.OutputStream
 
-class MainAnnotationProcessor(annotation: String, resolver: Resolver) : AnnotationProcessor(annotation, resolver) {
+class MainAnnotationProcessor : AnnotationProcessor("com.vanmo.common.plugins.Main") {
 
     inner class Visitor(private val file: OutputStream) : KSVisitorVoid() {
 
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
-            file += "package com.vanmo.generated"
             file += "import com.vanmo.common.plugins.IPlugin"
             file += "import ${classDeclaration.packageName.asString()}.${classDeclaration.simpleName.asString()}"
 
@@ -21,7 +21,9 @@ class MainAnnotationProcessor(annotation: String, resolver: Resolver) : Annotati
         }
     }
 
-    override fun visitor(file: OutputStream): KSVisitorVoid {
-        return Visitor(file)
+    override fun process(file: OutputStream, symbols: Sequence<KSAnnotated>) {
+        symbols
+            .filter { it is KSClassDeclaration && it.validate() }
+            .map { it.accept(Visitor(file), Unit) }
     }
 }
