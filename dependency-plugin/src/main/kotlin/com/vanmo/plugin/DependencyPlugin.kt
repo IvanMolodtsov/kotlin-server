@@ -8,7 +8,7 @@ open class DependencyPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.extensions.extraProperties.set("imports", imports)
 
-        project.plugins.apply("ksp")
+        project.plugins.apply("depsplugin")
         project.dependencies.extensions.add(
             ImportDependency::class.java,
             "import",

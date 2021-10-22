@@ -5,8 +5,14 @@ plugins {
 }
 
 dependencies {
-    implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.31-1.0.0")
     implementation(project(":common"))
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
+}
+repositories {
+    gradlePluginPortal()
+    maven {
+        url = uri("https://plugins.gradle.org/m2/")
+    }
 }
 
 gradlePlugin {

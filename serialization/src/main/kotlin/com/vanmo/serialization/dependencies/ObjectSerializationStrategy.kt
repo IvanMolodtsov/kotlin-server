@@ -1,5 +1,6 @@
 package com.vanmo.serialization.dependencies
 
+import com.vanmo.common.plugins.IDependency
 import com.vanmo.ioc.Dependency
 import com.vanmo.ioc.cast
 import com.vanmo.resolve
@@ -7,6 +8,7 @@ import com.vanmo.serialization.SerializableObject
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
+@IDependency("")
 class ObjectSerializationStrategy : Dependency {
     override fun invoke(args: Array<out Any>): JsonObject {
 

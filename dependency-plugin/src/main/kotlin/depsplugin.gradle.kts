@@ -1,15 +1,7 @@
-
-
 plugins {
     kotlin("jvm")
     `java-library`
-    id("com.google.devtools.ksp")
-}
-
-kotlin {
-    sourceSets.main {
-        allSource.srcDir("build/generated/ksp/main/kotlin")
-    }
+    kotlin("kapt")
 }
 
 val include: Configuration by configurations.creating
@@ -27,7 +19,7 @@ tasks {
                 mapOf(
                     "Implementation-Title" to project.name,
                     "Dependencies" to ext.properties["imports"],
-                    "Main-Class" to "${project.group}.${project.name}"
+                    "Main-Class" to "${project.group}.generated.${project.name}"
                 )
             )
         }
@@ -40,12 +32,23 @@ tasks {
     }
 }
 
-ksp {
-    arg("project-name", project.name)
-    arg("project-group", project.group as String)
+kapt {
+    arguments {
+        arg("project.group", "${project.group}")
+        arg("project.name", project.name)
+    }
+}
+
+repositories {
+    gradlePluginPortal()
+    google()
+    mavenCentral()
+    maven("https://plugins.gradle.org/m2/")
+    mavenLocal()
 }
 
 dependencies {
     implementation(project(":common"))
-    ksp(project(":processor"))
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.31")
+    kapt(project(":processor"))
 }

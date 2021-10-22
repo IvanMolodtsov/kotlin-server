@@ -1,11 +1,13 @@
 package com.vanmo.serialization.dependencies
 
+import com.vanmo.common.plugins.IDependency
 import com.vanmo.ioc.Dependency
 import com.vanmo.ioc.ResolveDependencyError
 import com.vanmo.ioc.cast
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.*
 
+@IDependency("")
 class PrimitiveDeserializationStrategy : Dependency {
 
     override fun invoke(args: Array<out Any>): Any {

@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     `maven-publish`
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.5.31"
 }
 
 tasks.jar {

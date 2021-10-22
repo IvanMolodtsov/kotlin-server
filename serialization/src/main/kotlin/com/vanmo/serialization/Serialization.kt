@@ -2,14 +2,12 @@ package com.vanmo.serialization
 
 import com.vanmo.common.command.Command
 import com.vanmo.common.plugins.IPlugin
-import com.vanmo.common.plugins.Main
 import com.vanmo.common.plugins.PluginLoadError
 import com.vanmo.ioc.asDependency
 import com.vanmo.resolve
 import com.vanmo.serialization.dependencies.*
 import kotlinx.serialization.json.Json
 
-@Main
 class Serialization : IPlugin {
 
     override fun load() {
