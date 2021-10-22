@@ -1,17 +1,15 @@
 package com.vanmo.serialization
 
 import com.vanmo.common.`object`.UObject
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
-class SerializableObject(internal val map: MutableMap<String, Any>) : UObject {
+class SObject(internal val map: MutableMap<String, Any>) : UObject {
 
     override fun get(key: String, orElse: () -> Any): Any {
-        return map[key]!!
+        return map.getOrElse(key, orElse)
     }
 
     override fun set(key: String, value: Any) {
-        map[key] = Json.encodeToString(value)
+        map[key] = value
     }
 
     override fun toString(): String {

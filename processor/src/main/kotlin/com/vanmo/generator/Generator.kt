@@ -9,7 +9,6 @@ import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
 import javax.tools.Diagnostic
 
 @AutoService(Processor::class)
@@ -18,17 +17,20 @@ import javax.tools.Diagnostic
 @SupportedOptions("kapt.kotlin.generated")
 class Generator : AbstractProcessor() {
 
-    private var loadScript = "\n"
-    private val importList = mutableListOf(
-        Pair("com.vanmo", "resolve"),
-        Pair("com.vanmo.common.command", "Command")
-    )
-
     override fun process(annotations: MutableSet<out TypeElement>?, env: RoundEnvironment): Boolean {
         val symbols = env.getElementsAnnotatedWith(IDependency::class.java)
+        if (symbols.isEmpty()) {
+            return true
+        }
         val dir = processingEnv.options["kapt.kotlin.generated"]
         val group = processingEnv.options["project.group"]!!
         val name = processingEnv.options["project.name"]!!
+
+        var loadScript = "\n"
+        val importList = mutableListOf(
+            Pair("com.vanmo", "resolve"),
+            Pair("com.vanmo.common.command", "Command")
+        )
 
         for (s in symbols) {
             if (s.kind !== ElementKind.CLASS) {

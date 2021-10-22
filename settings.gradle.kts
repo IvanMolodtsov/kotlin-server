@@ -7,6 +7,8 @@ include("serialization")
 include("processor")
 include("dependency-plugin")
 
+val kotlinVersion = "1.5.31"
+
 pluginManagement {
     repositories {
         google()
