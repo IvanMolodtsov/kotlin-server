@@ -55,7 +55,7 @@ class DeserializationStrategy : Dependency {
 
     override fun invoke(args: Array<out Any>): Any {
         val jsonString: String = cast(args[0])
-        val element = Json.decodeFromString(JsonElement.serializer(), jsonString)
+        val element = Json.parseToJsonElement(jsonString)
         return anyStrategy(element)
     }
 }

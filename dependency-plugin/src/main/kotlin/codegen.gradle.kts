@@ -9,6 +9,9 @@ val include: Configuration by configurations.creating
 configurations {
     compileClasspath.get().extendsFrom(include)
     runtimeClasspath.get().extendsFrom(include)
+
+    testCompileClasspath.get().extendsFrom(include)
+    testRuntimeClasspath.get().extendsFrom(include)
 }
 
 tasks {
