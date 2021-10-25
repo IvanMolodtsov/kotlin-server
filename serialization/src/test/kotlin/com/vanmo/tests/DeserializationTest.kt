@@ -22,4 +22,13 @@ class DeserializationTest {
         assertEquals(1, (obj["prop3"] as List<*>)[0])
         assertEquals(2, (obj["prop3"] as List<*>)[1])
     }
+
+    @Test
+    fun deserializeArray() {
+        val list: List<Int> = resolve("Deserialize", """[1,2,3]""")
+
+        assertEquals(1, list[0])
+        assertEquals(2, list[1])
+        assertEquals(3, list[2])
+    }
 }

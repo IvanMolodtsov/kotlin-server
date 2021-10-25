@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm")
     `java-library`
     kotlin("kapt")
+    kotlin("plugin.serialization")
 }
 
 val include: Configuration by configurations.creating

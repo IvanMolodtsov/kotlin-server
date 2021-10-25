@@ -4,7 +4,6 @@ import com.vanmo.common.plugins.IDependency
 import com.vanmo.ioc.Dependency
 import com.vanmo.serialization.SObject
 import kotlinx.serialization.json.*
-import java.io.Serializable
 
 @IDependency("Serialize")
 class SerializationStrategy : Dependency {
@@ -17,7 +16,7 @@ class SerializationStrategy : Dependency {
         return JsonObject(map)
     }
 
-    private fun arrayStrategy(iterable: Iterable<*>): JsonArray {
+    private fun arrayStrategy(iterable: Array<*>): JsonArray {
         val list = mutableListOf<JsonElement>()
         iterable.forEach {
             list.add(anyStrategy(it))
@@ -25,17 +24,32 @@ class SerializationStrategy : Dependency {
         return JsonArray(list)
     }
 
-    private fun primitiveStrategy(primitive: Any): JsonPrimitive {
-        return JsonPrimitive(primitive.toString())
+    private fun listStrategy(iterable: Iterable<*>): JsonArray {
+        val list = mutableListOf<JsonElement>()
+        iterable.forEach {
+            list.add(anyStrategy(it))
+        }
+        return JsonArray(list)
+    }
+
+    private fun primitiveStrategy(primitive: Any?): JsonPrimitive {
+        return when (primitive) {
+            is Number -> JsonPrimitive(primitive)
+            is Boolean -> JsonPrimitive(primitive)
+            is String -> JsonPrimitive(primitive)
+            else -> {
+                JsonNull
+            }
+        }
     }
 
     private fun anyStrategy(element: Any?): JsonElement {
         return when (element) {
             is SObject -> objectStrategy(element)
-            is Iterable<*> -> arrayStrategy(element)
-            is Serializable -> primitiveStrategy(element)
+            is Array<*> -> arrayStrategy(element)
+            is List<*> -> listStrategy(element)
             else -> {
-                return JsonNull
+                primitiveStrategy(element)
             }
         }
     }

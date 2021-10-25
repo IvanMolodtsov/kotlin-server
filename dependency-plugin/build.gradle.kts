@@ -2,10 +2,12 @@ plugins {
     `java-gradle-plugin`
     `kotlin-dsl`
     `maven-publish`
+//    kotlin("plugin.serialization")
 }
 
 dependencies {
     implementation(project(":common"))
+    implementation(kotlin("serialization"))
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
 }
 repositories {
