@@ -1,4 +1,4 @@
-package com.vanmo.ioc
+package com.vanmo.common.interfaces
 
 import java.io.Closeable
 

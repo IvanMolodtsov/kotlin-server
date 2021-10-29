@@ -1,8 +1,8 @@
 package com.vanmo.test
 
+import com.vanmo.common.interfaces.Usable
 import com.vanmo.ioc.Container
 import com.vanmo.ioc.ResolveDependencyError
-import com.vanmo.ioc.Usable
 import com.vanmo.ioc.scope.IScope
 import com.vanmo.ioc.scope.MutableScope
 import com.vanmo.resolve

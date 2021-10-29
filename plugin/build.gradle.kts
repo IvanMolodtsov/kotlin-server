@@ -2,12 +2,11 @@ plugins {
     `java-gradle-plugin`
     `kotlin-dsl`
     `maven-publish`
-//    kotlin("plugin.serialization")
 }
 
 dependencies {
     implementation(project(":common"))
-    implementation(kotlin("serialization"))
+    implementation("org.jetbrains.kotlin:kotlin-serialization:1.5.31")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
 }
 repositories {
@@ -19,8 +18,8 @@ repositories {
 
 gradlePlugin {
     plugins {
-        create("dependency-plugin") {
-            id = "com.vanmo.dependency-plugin"
+        create("plugin") {
+            id = "com.vanmo.plugin"
             implementationClass = "com.vanmo.plugin.DependencyPlugin"
         }
     }

@@ -1,7 +1,7 @@
 package com.vanmo.serialization.dependencies
 
 import com.vanmo.common.`object`.UObject
-import com.vanmo.common.plugins.IDependency
+import com.vanmo.common.annotations.IDependency
 import com.vanmo.ioc.Dependency
 import com.vanmo.ioc.cast
 import com.vanmo.serialization.SObject

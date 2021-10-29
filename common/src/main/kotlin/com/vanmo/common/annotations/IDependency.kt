@@ -1,5 +1,5 @@
-package com.vanmo.common.plugins
+package com.vanmo.common.annotations
 
-@Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
 annotation class IDependency(val key: String)

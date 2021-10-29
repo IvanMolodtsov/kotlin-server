@@ -1,6 +1,10 @@
 package com.vanmo.ioc.dependencies
 
-import com.vanmo.ioc.*
+import com.vanmo.common.interfaces.Usable
+import com.vanmo.ioc.Container
+import com.vanmo.ioc.Dependency
+import com.vanmo.ioc.ResolveDependencyError
+import com.vanmo.ioc.cast
 import com.vanmo.ioc.scope.IScope
 import java.io.Closeable
 import kotlin.Throws

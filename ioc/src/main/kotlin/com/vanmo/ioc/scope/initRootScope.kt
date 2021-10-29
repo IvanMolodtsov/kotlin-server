@@ -1,6 +1,6 @@
 package com.vanmo.ioc.scope
 
-import com.vanmo.ioc.Usable
+import com.vanmo.common.interfaces.Usable
 import com.vanmo.ioc.dependencies.ExecuteInScope
 import com.vanmo.ioc.dependencies.Register
 import com.vanmo.ioc.dependencies.ScopeNew

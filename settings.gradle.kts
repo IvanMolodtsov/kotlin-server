@@ -5,9 +5,9 @@ include("plugins")
 include("testPlugin")
 include("serialization")
 include("processor")
-include("dependency-plugin")
+include("plugin")
 
-val kotlinVersion = "1.5.31"
+//val kotlinVersion = "1.5.31"
 
 pluginManagement {
     repositories {

@@ -1,8 +1,8 @@
 package com.vanmo.test
 
 import com.vanmo.common.command.Command
+import com.vanmo.common.interfaces.Usable
 import com.vanmo.ioc.ResolveDependencyError
-import com.vanmo.ioc.Usable
 import com.vanmo.ioc.asDependency
 import com.vanmo.resolve
 import org.junit.jupiter.api.Assertions.assertEquals
