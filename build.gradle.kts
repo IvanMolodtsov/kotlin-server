@@ -34,12 +34,6 @@ subprojects {
         disabledRules.set(setOf("no-wildcard-imports"))
     }
 
-    sourceSets {
-        getByName("main") {
-            java.srcDir(File("build/generated/ksp/main/kotlin"))
-        }
-    }
-
     tasks {
         withType<KotlinCompile> {
             kotlinOptions {

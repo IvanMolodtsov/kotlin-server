@@ -10,7 +10,7 @@ class MainFile(packageName: String, private val className: String) : IFile(packa
         ClassName("com.vanmo.common.command", "Command")
     )
 
-    private var loadScript = "\n"
+    private var loadScript = "println(\"loading...\")\n"
 
     fun addDependency(key: String, className: ClassName) {
         importList.add(className)
@@ -28,7 +28,7 @@ class MainFile(packageName: String, private val className: String) : IFile(packa
                     addFunction(
                         FunSpec.builder("load").apply {
                             addModifiers(KModifier.OVERRIDE)
-                            addStatement(loadScript)
+                            addStatement(loadScript + "println(\"loaded\")\n")
                         }.build()
                     )
                 }.build()

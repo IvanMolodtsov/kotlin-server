@@ -1,8 +1,11 @@
 package com.vanmo.tests
 
 import com.vanmo.common.`object`.UObject
-import com.vanmo.generated.serialization
+import com.vanmo.common.command.Command
 import com.vanmo.resolve
+import com.vanmo.serialization.dependencies.DeserializationStrategy
+import com.vanmo.serialization.dependencies.SObjectNew
+import com.vanmo.serialization.dependencies.SerializationStrategy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -11,7 +14,9 @@ class DeserializationTest {
 
     @BeforeEach
     fun init() {
-        serialization().load()
+        resolve<Command>("IoC.Register", "Deserialize", DeserializationStrategy())()
+        resolve<Command>("IoC.Register", "SObject.new", SObjectNew())()
+        resolve<Command>("IoC.Register", "Serialize", SerializationStrategy())()
     }
 
     @Test
@@ -26,7 +31,6 @@ class DeserializationTest {
     @Test
     fun deserializeArray() {
         val list: List<Int> = resolve("Deserialize", """[1,2,3]""")
-
         assertEquals(1, list[0])
         assertEquals(2, list[1])
         assertEquals(3, list[2])
