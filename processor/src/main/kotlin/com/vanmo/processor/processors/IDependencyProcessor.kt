@@ -1,32 +1,30 @@
 package com.vanmo.processor.processors
 
+import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.validate
+import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
+import com.squareup.kotlinpoet.ksp.toClassName
 import com.vanmo.common.annotations.IDependency
 import com.vanmo.processor.files.MainFile
-import com.vanmo.resolve
-import javax.annotation.processing.ProcessingEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.TypeElement
-import javax.tools.Diagnostic
 
-class IDependencyProcessor : IProcessor(IDependency::class.java) {
+class IDependencyProcessor(private val file: MainFile) : IProcessor(IDependency::class) {
 
-    override fun processAnnotation(symbols: Set<Element>, processingEnv: ProcessingEnvironment): Boolean {
-        val file: MainFile = resolve("Files.Main")
-        for (s in symbols) {
-            if (s.kind !== ElementKind.CLASS) {
-                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "only classes are allowed", s)
-                return false
-            }
-            val clazz = s as TypeElement
-
-            val className = clazz.simpleName.toString()
-            val pName = processingEnv.elementUtils.getPackageOf(s).qualifiedName.toString()
-            val ann = s.getAnnotation(IDependency::class.java)
-            val key = ann.key
-            file.addDependency(key, pName, className)
+    private inner class Visitor : KSVisitorVoid() {
+        @OptIn(KotlinPoetKspPreview::class)
+        override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
+            val name = classDeclaration.toClassName()
+            val annotation = classDeclaration.annotations.first { it.shortName.asString() == "IDependency" }
+            val key = annotation.arguments[0].value!! as String
+//            file.loadScript += "$key $name"
+            file.addDependency(key, name)
         }
-        file.load()
-        return true
+    }
+
+    override fun processAnnotation(symbols: Sequence<KSAnnotated>) {
+        symbols.filter {
+            it is KSDeclaration && it.validate()
+        }.forEach {
+            it.accept(Visitor(), Unit)
+        }
     }
 }

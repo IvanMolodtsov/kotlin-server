@@ -1,8 +1,9 @@
 plugins {
     kotlin("jvm")
     `java-library`
-    kotlin("kapt")
+//    kotlin("kapt")
     kotlin("plugin.serialization")
+    id("com.google.devtools.ksp")
 }
 
 val include: Configuration by configurations.creating
@@ -35,11 +36,22 @@ tasks {
         )
     }
 }
+//
+// kapt {
+//    arguments {
+//        arg("project.group", "${project.group}")
+//        arg("project.name", project.name)
+//    }
+// }
 
-kapt {
-    arguments {
-        arg("project.group", "${project.group}")
-        arg("project.name", project.name)
+ksp {
+    arg("project.group", "${project.group}")
+    arg("project.name", project.name)
+}
+
+kotlin {
+    sourceSets.main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin")
     }
 }
 
@@ -53,6 +65,8 @@ repositories {
 
 dependencies {
     implementation(project(":common"))
+    implementation(project(":ioc"))
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.31")
-    kapt(project(":processor"))
+//    kapt(project(":processor"))
+    ksp(project(":processor"))
 }

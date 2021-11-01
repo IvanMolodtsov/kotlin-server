@@ -6,6 +6,8 @@ plugins {
 
 dependencies {
     implementation(project(":common"))
+    implementation(project(":ioc"))
+    implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.31-1.0.0")
     implementation("org.jetbrains.kotlin:kotlin-serialization:1.5.31")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
 }
@@ -24,17 +26,3 @@ gradlePlugin {
         }
     }
 }
-
-// tasks.jar {
-// //    manifest {
-// //        attributes(
-// //            mapOf(
-// // //                "Implementation-Title" to project.name,
-// // //                "Main-Class" to "com.vanmo.test.TestPlugin",
-// // //                "Dependencies" to ext.properties["imports"]
-// //            )
-// //        )
-// //    }
-//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-// }

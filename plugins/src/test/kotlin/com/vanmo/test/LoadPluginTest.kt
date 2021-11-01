@@ -1,9 +1,9 @@
 package com.vanmo.test
 
 import com.vanmo.common.command.Command
+import com.vanmo.common.interfaces.Usable
 import com.vanmo.ioc.Container
 import com.vanmo.ioc.ResolveDependencyError
-import com.vanmo.common.interfaces.Usable
 import com.vanmo.plugins.Plugin
 import com.vanmo.plugins.Plugins
 import com.vanmo.resolve

@@ -4,6 +4,5 @@ plugins {
 }
 
 dependencies {
-    import(implementation(project(":ioc")))
     include("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 }

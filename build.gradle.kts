@@ -1,4 +1,5 @@
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.5.31" apply false
@@ -33,16 +34,16 @@ subprojects {
         disabledRules.set(setOf("no-wildcard-imports"))
     }
 
-    val includeJars by configurations.creating
-
-    configurations {
-        runtimeClasspath.get().extendsFrom(includeJars)
+    sourceSets {
+        getByName("main") {
+            java.srcDir(File("build/generated/ksp/main/kotlin"))
+        }
     }
 
     tasks {
-        withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        withType<KotlinCompile> {
             kotlinOptions {
-                freeCompilerArgs = listOf("-Xjsr305=strict")
+                freeCompilerArgs = listOf("-Xjsr305=strict", "-Xopt-in=kotlin.RequiresOptIn")
                 jvmTarget = "11"
             }
             dependsOn("ktlintFormat")

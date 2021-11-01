@@ -2,8 +2,8 @@ package com.vanmo.plugins
 
 import com.vanmo.common.command.Command
 import com.vanmo.common.command.CommandExecutionError
-import com.vanmo.common.plugins.IPlugin
 import com.vanmo.common.interfaces.Usable
+import com.vanmo.common.plugins.IPlugin
 import com.vanmo.ioc.scope.MutableScope
 import com.vanmo.resolve
 

@@ -1,16 +1,17 @@
 package com.vanmo.processor.processors
 
-import javax.annotation.processing.ProcessingEnvironment
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.KSAnnotated
+import kotlin.reflect.KClass
+import kotlin.reflect.jvm.jvmName
 
-abstract class IProcessor(private val annotation: Class<out Annotation>) {
+abstract class IProcessor(private val annotation: KClass<out Annotation>) {
 
-    abstract fun processAnnotation(symbols: Set<Element>, processingEnv: ProcessingEnvironment): Boolean
+    abstract fun processAnnotation(symbols: Sequence<KSAnnotated>)
 
-    fun process(env: RoundEnvironment, processingEnv: ProcessingEnvironment): Boolean {
-        val symbols = env.getElementsAnnotatedWith(annotation)
-        if (symbols.isEmpty()) return true
-        return processAnnotation(symbols, processingEnv)
+    fun process(resolver: Resolver) {
+        val symbols = resolver.getSymbolsWithAnnotation(annotation.jvmName)
+        if (!symbols.iterator().hasNext()) return
+        processAnnotation(symbols)
     }
 }

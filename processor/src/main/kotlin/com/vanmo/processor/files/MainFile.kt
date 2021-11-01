@@ -1,33 +1,29 @@
 package com.vanmo.processor.files
 
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.*
 import com.vanmo.common.plugins.IPlugin
 
-class MainFile(directory: String, packageName: String, className: String) : IFile(directory, packageName, className) {
+class MainFile(packageName: String, private val className: String) : IFile(packageName, className) {
 
     private val importList = mutableListOf(
-        Pair("com.vanmo", "resolve"),
-        Pair("com.vanmo.common.command", "Command")
+        ClassName("com.vanmo", "resolve"),
+        ClassName("com.vanmo.common.command", "Command")
     )
 
     private var loadScript = "\n"
 
-    fun addDependency(key: String, packageName: String, className: String) {
-        importList.add(Pair(packageName, className))
-        loadScript += "resolve<Command>(\"IoC.Register\",\"$key\",$className())()\n"
+    fun addDependency(key: String, className: ClassName) {
+        importList.add(className)
+        loadScript += "resolve<Command>(\"IoC.Register\",\"$key\",${className.simpleName}())()\n"
     }
 
     override fun build(file: FileSpec.Builder): FileSpec {
         return file.apply {
             importList.forEach {
-                val (pack, name) = it
-                addImport(pack, name)
+                addImport(it.packageName, it.simpleName)
             }
             addType(
-                TypeSpec.classBuilder(name).apply {
+                TypeSpec.classBuilder(className).apply {
                     addSuperinterface(IPlugin::class)
                     addFunction(
                         FunSpec.builder("load").apply {
