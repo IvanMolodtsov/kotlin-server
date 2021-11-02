@@ -3,46 +3,44 @@ package com.vanmo.processor.files
 import com.squareup.kotlinpoet.*
 import com.vanmo.common.`object`.UObject
 
-class WrapperFile(packageName: String, private val className: String) : IFile(packageName, "${className}Wrapper") {
+class WrapperFile(packageName: String, private val className: ClassName) : IFile(packageName, "${className.simpleName}Wrapper") {
 
-    lateinit var parent: TypeName
+    private val properties: MutableList<PropertySpec.Builder> = mutableListOf()
 
-    private val properties: HashMap<String, PropertySpec.Builder> = hashMapOf()
-    fun addAccessor(fname: String, type: TypeName) {
-        val name = fname.drop(3)
-        val prop = properties.getOrPut(name) {
-            PropertySpec.builder(name, type, KModifier.OVERRIDE)
-        }
-        if (fname.startsWith("set")) {
-            prop.mutable(true)
-            prop.setter(
-                FunSpec.setterBuilder().apply {
-                    addParameter("value", type)
-                    addCode("resolve<Unit>(\"set\", value)\n")
-                }.build()
-            )
-        } else {
-            prop.getter(
-                FunSpec.getterBuilder().apply {
-                    addCode("return resolve(\"get\")\n")
-                }.build()
-            )
-        }
+    fun addProperty(name: String, typeName: TypeName, mutable: Boolean) {
+        properties.add(
+            PropertySpec.builder(name, typeName, KModifier.OVERRIDE).apply {
+                getter(
+                    FunSpec.getterBuilder().apply {
+                        addCode("return resolve(\"get\", \"${className.canonicalName}\", \"$name\", $typeName::class)")
+                    }.build()
+                )
+                if (mutable) {
+                    mutable(true)
+                    setter(
+                        FunSpec.setterBuilder().apply {
+                            addParameter("v", typeName)
+                            addCode("println(\"set\")")
+                        }.build()
+                    )
+                }
+            }
+        )
     }
 
     override fun build(file: FileSpec.Builder): FileSpec {
         return file.apply {
             addImport("com.vanmo", "resolve")
             addType(
-                TypeSpec.classBuilder("${className}Wrapper").apply {
+                TypeSpec.classBuilder("${className.simpleName}Wrapper").apply {
                     primaryConstructor(
                         FunSpec.constructorBuilder().apply {
                             addParameter("obj", UObject::class)
                         }.build()
                     )
                     addProperty(PropertySpec.builder("obj", UObject::class, KModifier.PRIVATE).initializer("obj").build())
-                    addSuperinterface(parent)
-                    properties.values.forEach {
+                    addSuperinterface(className)
+                    properties.forEach {
                         addProperty(it.build())
                     }
                 }.build()

@@ -6,16 +6,17 @@ import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.vanmo.common.annotations.IDependency
 import com.vanmo.processor.files.MainFile
+import com.vanmo.resolve
 
-class IDependencyProcessor(private val file: MainFile) : IProcessor(IDependency::class) {
+class IDependencyProcessor() : IProcessor(IDependency::class) {
 
     private inner class Visitor : KSVisitorVoid() {
         @OptIn(KotlinPoetKspPreview::class)
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
+            val file = resolve<MainFile>("Files.Main")
             val name = classDeclaration.toClassName()
             val annotation = classDeclaration.annotations.first { it.shortName.asString() == "IDependency" }
             val key = annotation.arguments[0].value!! as String
-//            file.loadScript += "$key $name"
             file.addDependency(key, name)
         }
     }
