@@ -2,10 +2,12 @@ import org.apache.tools.ant.taskdefs.condition.Os
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.31" apply false
+    kotlin("jvm") version "1.6.20" apply false
     java
-    id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
 }
+
+val kotlin_version: String by project
 
 allprojects {
     group = "com.vanmo"
@@ -25,7 +27,7 @@ subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
     dependencies {
-        implementation(kotlin("stdlib"))
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
         testImplementation(platform("org.junit:junit-bom:5.7.2"))
         testImplementation("org.junit.jupiter:junit-jupiter")
     }

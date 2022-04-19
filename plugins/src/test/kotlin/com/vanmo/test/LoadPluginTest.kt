@@ -30,7 +30,7 @@ class LoadPluginTest {
     fun `load plugin test`() {
         resolve<Usable>("Scopes.executeInNewScope").use {
             val plugin: Plugin = resolve("Plugin.new", testJar, javaClass.classLoader)
-            assertEquals("com.vanmo.test.TestPlugin", plugin.name)
+            assertEquals("com.vanmo.generated.testPlugin", plugin.name)
         }
     }
 

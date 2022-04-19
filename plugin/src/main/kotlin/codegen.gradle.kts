@@ -1,12 +1,12 @@
 plugins {
     kotlin("jvm")
     `java-library`
-//    kotlin("kapt")
     kotlin("plugin.serialization")
     id("com.google.devtools.ksp")
 }
 
 val include: Configuration by configurations.creating
+val kotlin_version = "1.6.20"
 
 configurations {
     compileClasspath.get().extendsFrom(include)
@@ -36,13 +36,6 @@ tasks {
         )
     }
 }
-//
-// kapt {
-//    arguments {
-//        arg("project.group", "${project.group}")
-//        arg("project.name", project.name)
-//    }
-// }
 
 ksp {
     arg("project.group", "${project.group}")
@@ -77,7 +70,6 @@ repositories {
 dependencies {
     implementation(project(":common"))
     implementation(project(":ioc"))
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.31")
-//    kapt(project(":processor"))
+    implementation(kotlin("reflect"))
     ksp(project(":processor"))
 }

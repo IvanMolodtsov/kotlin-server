@@ -1,21 +1,11 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.5.31"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.6.20"
 }
 
-tasks.jar {
-    manifest {
-        attributes(
-            mapOf(
-                "Implementation-Title" to project.name,
-                "Main-Class" to "com.vanmo.test.TestPlugin",
-//                "Dependencies" to ext.properties["imports"]
-            )
-        )
-    }
-
-    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+allOpen {
+    annotation("com.vanmo.common.annotations.DataClass")
 }
 
 publishing {

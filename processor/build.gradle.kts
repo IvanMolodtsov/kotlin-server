@@ -1,25 +1,21 @@
 plugins {
     `maven-publish`
-//    kotlin("kapt")
 }
+val kotlin_version: String by project
+val ksp_version: String by project
 
 dependencies {
     implementation(project(":common"))
     implementation(project(":ioc"))
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.31")
-    implementation("com.squareup:kotlinpoet:1.10.1")
-    implementation("com.squareup:kotlinpoet-ksp:1.10.1")
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.5.31-1.0.0")
-
-//    implementation("com.squareup:kotlinpoet-metadata:1.10.1")
-//    implementation("com.google.auto.service:auto-service:1.0")
-//    kapt("com.google.auto.service:auto-service:1.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
+    implementation("com.squareup:kotlinpoet:1.11.0")
+    implementation("com.squareup:kotlinpoet-ksp:1.11.0")
+    implementation("com.google.devtools.ksp:symbol-processing-api:$kotlin_version-$ksp_version")
 }
 
 publishing {
     publications {
         create<MavenPublication>("maven") {
-
             from(components["java"])
         }
     }
