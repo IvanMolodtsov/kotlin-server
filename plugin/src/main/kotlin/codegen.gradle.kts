@@ -6,7 +6,6 @@ plugins {
 }
 
 val include: Configuration by configurations.creating
-val kotlin_version = "1.6.20"
 
 configurations {
     compileClasspath.get().extendsFrom(include)

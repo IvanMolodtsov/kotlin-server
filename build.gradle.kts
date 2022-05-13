@@ -2,7 +2,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.20" apply false
+    kotlin("jvm") version "1.6.21" apply false
     java
     id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
 }
@@ -39,7 +39,7 @@ subprojects {
     tasks {
         withType<KotlinCompile> {
             kotlinOptions {
-                freeCompilerArgs = listOf("-Xjsr305=strict", "-Xopt-in=kotlin.RequiresOptIn")
+                freeCompilerArgs = listOf("-Xjsr305=strict", "-opt-in=kotlin.RequiresOptIn")
                 jvmTarget = "11"
             }
             dependsOn("ktlintFormat")

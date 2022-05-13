@@ -1,7 +1,7 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.6.20"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.6.21"
 }
 
 allOpen {
