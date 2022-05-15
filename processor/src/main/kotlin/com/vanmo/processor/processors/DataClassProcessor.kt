@@ -7,12 +7,11 @@ import com.google.devtools.ksp.symbol.KSVisitorVoid
 import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toClassName
-import com.squareup.kotlinpoet.ksp.toTypeName
-import com.vanmo.common.annotations.DataClass
+import com.vanmo.common.annotations.DTO
 import com.vanmo.processor.files.WrapperFile
 import com.vanmo.resolve
 
-class DataClassProcessor : IProcessor(DataClass::class) {
+class DataClassProcessor : IProcessor(DTO::class) {
 
     private inner class Visitor : KSVisitorVoid() {
         @OptIn(KotlinPoetKspPreview::class)
@@ -20,9 +19,9 @@ class DataClassProcessor : IProcessor(DataClass::class) {
 
             val name = classDeclaration.toClassName()
             val file: WrapperFile = resolve("Files.Wrapper", name)
-            val annotation = classDeclaration.annotations.first { it.shortName.asString() == "DataClass" }
+            val annotation = classDeclaration.annotations.first { it.shortName.asString() == DTO::class.simpleName }
             classDeclaration.getAllProperties().forEach {
-                file.addProperty(it.simpleName.asString(), it.type.toTypeName(), it.isMutable)
+                file.addProperty(it)
             }
         }
     }

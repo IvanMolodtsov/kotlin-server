@@ -1,9 +1,11 @@
 package com.vanmo.test
 
-import com.vanmo.common.annotations.DataClass
+import com.vanmo.common.annotations.DTO
+import com.vanmo.common.annotations.Transform
 
-@DataClass
+@DTO
 interface TestInterface {
+    @Transform("toInt", "unsigned:true")
     var A: Int
     var B: String
     var C: Array<Int>

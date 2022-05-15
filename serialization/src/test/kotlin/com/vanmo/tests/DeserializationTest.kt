@@ -1,7 +1,7 @@
 package com.vanmo.tests
 
-import com.vanmo.common.`object`.UObject
 import com.vanmo.common.command.Command
+import com.vanmo.common.`object`.UObject
 import com.vanmo.resolve
 import com.vanmo.serialization.dependencies.DeserializationStrategy
 import com.vanmo.serialization.dependencies.SObjectNew
