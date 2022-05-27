@@ -6,9 +6,10 @@ import com.vanmo.common.annotations.Validate
 
 @DTO
 interface TestInterface {
-    @Transform("toInt",)
-    @Validate("positive")
+    @Transform("toInt", "Arg1:val")
+    @Validate("positive", "Arg1:val", "Arg2:val")
     var A: Int
     var B: String
     var C: Array<Int>
+    var D: HashMap<String, Any>
 }

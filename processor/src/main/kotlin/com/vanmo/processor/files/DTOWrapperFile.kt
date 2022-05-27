@@ -9,39 +9,40 @@ import com.vanmo.common.annotations.Transform
 import com.vanmo.common.annotations.Validate
 import com.vanmo.common.`object`.UObject
 
-class WrapperFile(packageName: String, private val className: ClassName) : IFile(packageName, "${className.simpleName}Wrapper") {
+class DTOWrapperFile(packageName: String, private val className: ClassName) : IFile(packageName, "${className.simpleName}Wrapper") {
 
     private val properties: MutableList<PropertySpec.Builder> = mutableListOf()
     private val methods: MutableList<FunSpec.Builder> = mutableListOf()
 
-    private fun validation(annotations: List<KSAnnotation>, field: String): String {
+    private fun parseOptions(options: List<*>): String {
+        return if (options.isNotEmpty()) {
+            var opts = "mapOf<String, String>("
+            options.forEach {
+
+                if (it !== null && (it as String).isNotEmpty()) {
+                    val pair = it.split(':').toTypedArray()
+                    opts += "\"${pair[0]}\" to \"${pair[1]}\","
+                }
+            }
+            opts += ")"
+            opts
+        } else {
+            ""
+        }
+    }
+
+    private fun validation(annotations: List<KSAnnotation>, field: String, nullable: Boolean): String {
         var body = "val err: MutableList<ValidationError> = mutableListOf() \n"
-        var optional = ""
+
         annotations.forEach { ann ->
             val strategy = ann.arguments[0].value as String
-            val optString = ann.arguments[1].value as String?
-            var opt = ""
-            if (optString !== null && optString.isNotEmpty()) {
-                opt = "mapOf<String, String>("
-                optString.apply {
-                    split(' ').forEach {
-                        if (it.isNotEmpty()) {
-                            val pair = it.split(':').toTypedArray()
-                            opt += "\"${pair[0]}\" to \"${pair[1]}\","
-                        }
-                    }
-                }
-                opt += ")"
-            }
-            if (strategy === "optional") {
-                optional = "if (resolve(\"validation.optional\", this.obj, \"$field\")) return; \n"
-            } else {
-                body += "resolve<ValidationError?>(\"$strategy\", data, $opt).also {\n    if (it !== null) { err.add(it) }\n}\n"
-            }
+            val options = ann.arguments[1].value as List<*>
+            val opt = parseOptions(options)
+            body += "resolve<ValidationError?>(\"$strategy\", data, $opt).also {\n    if (it !== null) { err.add(it) }\n}\n"
         }
 
-        if (optional !== "") {
-            body = optional + body
+        if (nullable) {
+            body += "if (resolve(\"validation.optional\", this.obj, \"$field\")) return; \n"
         }
 
         body += "if (err.isNotEmpty()) {\n" +
@@ -50,51 +51,25 @@ class WrapperFile(packageName: String, private val className: ClassName) : IFile
         return body
     }
 
-    private fun transformFrom(ann: KSAnnotation?, type: TypeName): String {
+    private fun transformFrom(ann: KSAnnotation?, type: String): String {
         return if (ann !== null) {
             val strategy = ann.arguments[0].value as String
-            val optString = ann.arguments[1].value as String?
-            if (optString !== null && optString.isNotEmpty()) {
-                var opt = "val opts: Map<String, String> = mapOf("
-                optString.apply {
-                    split(' ').forEach {
-                        if (it.isNotEmpty()) {
-                            val pair = it.split(':').toTypedArray()
-                            opt += "\"${pair[0]}\" to \"${pair[1]}\","
-                        }
-                    }
-                }
-                opt += ") \n"
-                opt + "var data: $type = resolve(\"transform.from\", \"${strategy}\", value, $type::class, this.obj, opts)\n"
-            } else {
-                "var data: $type = resolve(\"transform.from\", \"${strategy}\", value, $type::class, this.obj)\n"
-            }
+            val options = ann.arguments[1].value as List<String>
+            val opt = parseOptions(options)
+            "resolve(\"transform.from\", \"${strategy}\", value, $type::class, this.obj, $opt)\n"
         } else {
-            "var data: $type = resolve(\"transform.from\", \"basic\", value, $type::class, this.obj)\n"
+            "resolve(\"transform.from\", \"basic\", value, $type::class, this.obj)\n"
         }
     }
 
-    private fun transformTo(ann: KSAnnotation?, field: String, type: TypeName): String {
+    private fun transformTo(ann: KSAnnotation?, field: String, typeName: TypeName, type: String): String {
         return if (ann !== null) {
             val strategy = ann.arguments[0].value as String
-            val optString = ann.arguments[1].value as String?
-            if (optString !== null) {
-                var opt = "val opts: Map<String, String> = mapOf("
-                optString.apply {
-                    split(' ').forEach {
-                        if (it.isNotEmpty()) {
-                            val pair = it.split(':').toTypedArray()
-                            opt += "\"${pair[0]}\" to \"${pair[1]}\","
-                        }
-                    }
-                }
-                opt += ") \n"
-                opt + "var data: $type = resolve(\"transform.to\", \"${strategy}\", \"$field\", $type::class, this.obj, opts)\n"
-            } else {
-                "var data: $type = resolve(\"transform.to\", \"${strategy}\", \"$field\", $type::class, this.obj)\n"
-            }
+            val options = ann.arguments[1].value as List<String>
+            val opt = parseOptions(options)
+            "var data: $typeName = resolve(\"transform.to\", \"${strategy}\", \"$field\", $type::class, this.obj, $opt)\n"
         } else {
-            "var data: $type = resolve(\"transform.to\", \"basic\", \"$field\", $type::class, this.obj)\n"
+            "var data: $typeName = resolve(\"transform.to\", \"basic\", \"$field\", $type::class, this.obj)\n"
         }
     }
 
@@ -106,6 +81,8 @@ class WrapperFile(packageName: String, private val className: ClassName) : IFile
         val transform = annotations.find {
             it.shortName.asString() == Transform::class.simpleName.toString()
         }
+
+        val typeSimpleName = prop.type.toString()
         val validations = annotations.filter {
             it.shortName.asString() == Validate::class.simpleName.toString()
         }.toList()
@@ -115,7 +92,7 @@ class WrapperFile(packageName: String, private val className: ClassName) : IFile
                 FunSpec.builder("${name}FieldValidator",).apply {
                     addModifiers(KModifier.PRIVATE)
                     addParameter("data", typeName)
-                    addCode(validation(validations, name))
+                    addCode(validation(validations, name, typeName.isNullable))
                 }
             )
         }
@@ -124,7 +101,7 @@ class WrapperFile(packageName: String, private val className: ClassName) : IFile
             PropertySpec.builder(name, typeName, KModifier.OVERRIDE).apply {
                 getter(
                     FunSpec.getterBuilder().apply {
-                        addCode(transformTo(transform, name, typeName))
+                        addCode(transformTo(transform, name, typeName, typeSimpleName))
                         if (validations.isNotEmpty()) {
                             addCode("${name}FieldValidator(data) \n")
                         }
@@ -136,11 +113,11 @@ class WrapperFile(packageName: String, private val className: ClassName) : IFile
                     setter(
                         FunSpec.setterBuilder().apply {
                             addParameter("value", typeName)
-                            addCode(transformFrom(transform, typeName))
+
                             if (validations.isNotEmpty()) {
-                                addCode("${name}FieldValidator(data) \n")
+                                addCode("${name}FieldValidator(value) \n")
                             }
-                            addCode("this.obj[\"$name\"] = data")
+                            addCode("this.obj[\"$name\"] = ${transformFrom(transform, typeSimpleName)}")
                         }.build()
                     )
                 }

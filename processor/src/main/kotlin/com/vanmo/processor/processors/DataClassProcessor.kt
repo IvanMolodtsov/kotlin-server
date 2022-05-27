@@ -8,7 +8,7 @@ import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.vanmo.common.annotations.DTO
-import com.vanmo.processor.files.WrapperFile
+import com.vanmo.processor.files.DTOWrapperFile
 import com.vanmo.resolve
 
 class DataClassProcessor : IProcessor(DTO::class) {
@@ -18,7 +18,7 @@ class DataClassProcessor : IProcessor(DTO::class) {
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
 
             val name = classDeclaration.toClassName()
-            val file: WrapperFile = resolve("Files.Wrapper", name)
+            val file: DTOWrapperFile = resolve("Files.DTOWrapper", name)
             val annotation = classDeclaration.annotations.first { it.shortName.asString() == DTO::class.simpleName }
             classDeclaration.getAllProperties().forEach {
                 file.addProperty(it)

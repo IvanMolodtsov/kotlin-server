@@ -15,9 +15,14 @@ class IDependencyProcessor() : IProcessor(IDependency::class) {
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
             val file = resolve<MainFile>("Files.Main")
             val name = classDeclaration.toClassName()
-            val annotation = classDeclaration.annotations.first { it.shortName.asString() == "IDependency" }
+            val annotation = classDeclaration.annotations.first { it.shortName.asString() == IDependency::class.simpleName }
             val key = annotation.arguments[0].value!! as String
             file.addDependency(key, name)
+        }
+
+        override fun visitFunctionDeclaration(function: KSFunctionDeclaration, data: Unit) {
+            val file = resolve<MainFile>("Files.Main")
+            function
         }
     }
 

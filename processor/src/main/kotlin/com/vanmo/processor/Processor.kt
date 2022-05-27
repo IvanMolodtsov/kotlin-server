@@ -4,7 +4,7 @@ import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.*
 import com.vanmo.processor.files.Files
-import com.vanmo.processor.files.deps
+import com.vanmo.processor.files.dependencies
 import com.vanmo.processor.processors.IProcessor
 import com.vanmo.processor.processors.processors
 
@@ -22,7 +22,7 @@ class Processor(
         val group = options["project.group"]!!
         val name = options["project.name"]!!
         files = Files("$group.generated")
-        files.deps(name)
+        files.dependencies(name, logger)
         processors = processors()
     }
 
