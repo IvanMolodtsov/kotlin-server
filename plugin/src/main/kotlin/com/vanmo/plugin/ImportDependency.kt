@@ -6,7 +6,7 @@ open class ImportDependency(private val imports: MutableList<String>) : (Depende
 
     override fun invoke(dependency: Dependency?): Dependency? {
         if (dependency != null) {
-            imports.add("${dependency.group}:${dependency.name}:${dependency.version}")
+            imports.add("${dependency.group}.${dependency.name}:${dependency.version}")
         }
         return dependency
     }

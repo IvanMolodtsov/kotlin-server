@@ -25,7 +25,7 @@ class LoadPluginCommand(
                 resolve<Command>("IoC.Unregister", "IoC.Register")()
             }
         } catch (ex: Throwable) {
-            throw CommandExecutionError("Plugin ${plugin.name} loading failed.", ex)
+            throw CommandExecutionError("Plugin ${plugin.entryPoint} loading failed.", ex)
         }
     }
 }

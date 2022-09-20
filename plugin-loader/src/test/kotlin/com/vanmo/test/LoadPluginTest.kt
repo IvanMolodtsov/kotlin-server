@@ -2,10 +2,10 @@ package com.vanmo.test
 
 import com.vanmo.common.command.Command
 import com.vanmo.common.interfaces.Usable
+import com.vanmo.generated.`plugin-loader`
 import com.vanmo.ioc.Container
 import com.vanmo.ioc.ResolveDependencyError
 import com.vanmo.plugins.Plugin
-import com.vanmo.plugins.Plugins
 import com.vanmo.resolve
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
@@ -22,15 +22,16 @@ class LoadPluginTest {
 
     @BeforeAll
     fun init() {
-        testJar = Paths.get(System.getProperty("user.dir"), "src/test/resources/testPlugin-1.0.0.jar").toFile()
-        Plugins().load()
+        testJar = Paths.get(System.getProperty("user.dir"), "../testPlugin/build/libs/testPlugin-1.0.0.jar").toFile()
+        `plugin-loader`().load()
     }
 
     @Test
     fun `load plugin test`() {
         resolve<Usable>("Scopes.executeInNewScope").use {
             val plugin: Plugin = resolve("Plugin.new", testJar, javaClass.classLoader)
-            assertEquals("com.vanmo.generated.testPlugin", plugin.name)
+            assertEquals("com.vanmo.generated.testPlugin", plugin.entryPoint)
+            assertEquals(2, plugin.dependencies.size)
         }
     }
 

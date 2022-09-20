@@ -1,11 +1,8 @@
 package com.vanmo.tests
 
-import com.vanmo.common.command.Command
 import com.vanmo.common.`object`.UObject
+import com.vanmo.generated.serialization
 import com.vanmo.resolve
-import com.vanmo.serialization.dependencies.DeserializationStrategy
-import com.vanmo.serialization.dependencies.SObjectNew
-import com.vanmo.serialization.dependencies.SerializationStrategy
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -13,9 +10,7 @@ import org.junit.jupiter.api.Test
 class SerializationTest {
     @BeforeEach
     fun init() {
-        resolve<Command>("IoC.Register", "Deserialize", DeserializationStrategy())()
-        resolve<Command>("IoC.Register", "SObject.new", SObjectNew())()
-        resolve<Command>("IoC.Register", "Serialize", SerializationStrategy())()
+        serialization().load()
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.vanmo.test
+package com.vanmo.testPlugin
 
 import com.vanmo.common.annotations.DTO
 import com.vanmo.common.annotations.Transform

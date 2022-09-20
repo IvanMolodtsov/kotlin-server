@@ -1,7 +1,7 @@
 rootProject.name = "kotlin-server"
 include("common")
 include("ioc")
-include("plugins")
+include("plugin-loader")
 include("testPlugin")
 include("serialization")
 include("processor")

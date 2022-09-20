@@ -6,7 +6,10 @@ import org.gradle.api.Project
 open class DependencyPlugin : Plugin<Project> {
     private val imports = mutableListOf<String>()
     override fun apply(project: Project) {
-        project.extensions.extraProperties.set("imports", imports)
+        project.extensions.extraProperties.set(
+            "imports",
+            imports
+        )
 
         project.plugins.apply("codegen")
         project.dependencies.extensions.add(

@@ -21,9 +21,12 @@ tasks {
         manifest {
             attributes(
                 mapOf(
-                    "Implementation-Title" to project.name,
-                    "Dependencies" to ext.properties["imports"],
-                    "Main-Class" to "${project.group}.generated.${project.name}"
+                    "Implementation-Title" to "${project.group}.${project.name}",
+                    "Implementation-Version" to project.version,
+                    "Dependencies" to (ext.properties["imports"] as MutableList<String>).fold("") { acc, s ->
+                        "$acc$s;"
+                    },
+                    "Main-Class" to "${project.group}.generated.${project.name}",
                 )
             )
         }
@@ -67,8 +70,8 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":common"))
-    implementation(project(":ioc"))
+//    implementation(project(":common"))
+//    implementation(project(":ioc"))
     implementation(kotlin("reflect"))
     ksp(project(":processor"))
 }
