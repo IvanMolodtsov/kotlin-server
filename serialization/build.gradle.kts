@@ -4,5 +4,5 @@ plugins {
 }
 
 dependencies {
-    include("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    include("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
 }

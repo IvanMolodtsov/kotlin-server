@@ -3,7 +3,6 @@ package com.vanmo.processor.files
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.writeTo
 
 abstract class IFile(packageName: String, className: String) {
@@ -12,7 +11,6 @@ abstract class IFile(packageName: String, className: String) {
 
     abstract fun build(file: FileSpec.Builder): FileSpec
 
-    @OptIn(KotlinPoetKspPreview::class)
     fun load(codeGenerator: CodeGenerator, dependencies: Dependencies) {
         val fileSpec = build(file)
         fileSpec.writeTo(codeGenerator, dependencies)

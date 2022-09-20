@@ -2,7 +2,6 @@ package com.vanmo.processor.processors
 
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.vanmo.common.annotations.IDependency
 import com.vanmo.processor.files.MainFile
@@ -11,7 +10,6 @@ import com.vanmo.resolve
 class IDependencyProcessor() : IProcessor(IDependency::class) {
 
     private inner class Visitor : KSVisitorVoid() {
-        @OptIn(KotlinPoetKspPreview::class)
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
             val file = resolve<MainFile>("Files.Main")
             val name = classDeclaration.toClassName()

@@ -5,7 +5,6 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSVisitorVoid
 import com.google.devtools.ksp.validate
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.vanmo.common.annotations.DTO
 import com.vanmo.processor.files.DTOWrapperFile
@@ -14,7 +13,7 @@ import com.vanmo.resolve
 class DataClassProcessor : IProcessor(DTO::class) {
 
     private inner class Visitor : KSVisitorVoid() {
-        @OptIn(KotlinPoetKspPreview::class)
+
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
 
             val name = classDeclaration.toClassName()

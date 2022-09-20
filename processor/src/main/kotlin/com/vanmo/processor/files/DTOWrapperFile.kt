@@ -3,7 +3,6 @@ package com.vanmo.processor.files
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.squareup.kotlinpoet.*
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.vanmo.common.annotations.Transform
 import com.vanmo.common.annotations.Validate
@@ -72,8 +71,6 @@ class DTOWrapperFile(packageName: String, private val className: ClassName) : IF
             "var data: $typeName = resolve(\"transform.to\", \"basic\", \"$field\", $type::class, this.obj)\n"
         }
     }
-
-    @OptIn(KotlinPoetKspPreview::class)
     fun addProperty(prop: KSPropertyDeclaration) {
         val name = prop.simpleName.asString()
         val typeName = prop.type.toTypeName()
